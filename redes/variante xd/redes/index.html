@@ -1,0 +1,146 @@
+<html>
+	<head>
+		<title>Sobre nuestro servidor</title>
+		<meta http-equiv="content-type" content="text/html;charset=utf-8" />
+		<link rel="stylesheet" type="text/css" href="css/estilo.css" />
+	</head>
+
+	<body>
+		<div>
+			<h3>Protocolo implementado</h3>
+			<p>
+				El servidor implementa el protocolo de transferencia de hipertexto (HTTP) este es un nivel de aplicación de protocolos con la ligereza y la velocidad necesaria para distribuir, sistemas de información hipermedia de colaboracion. Este protocolo denominado también como "HTTP / 1.0" describe las caracteristicas que parecen ser aplicado de manera coherente en la mayoria de los clientes HTTP / 1.0 y servidores.<br>
+				Metodos que implementa el servidor de este protocolo.
+			</p>
+			<ul>
+				<li><b>GET</b>: El metodo solicita una representación de un recurso especifico. Las peticiones que usan el metodo GET sólo deben recuperar datos.</li>
+                <li><b>HEAD</b>: El metodo pide una respuesta identica a la de una petición GET, pero sin el cuerpo de la respuesta.</li>
+			</ul>
+		</div>
+		<div>
+			<h3>Diseño del servidor</h3>
+			<p>
+				El servidor esta desarrollado en el lenguaje de programacion C. Esta diseñado para implementar los metodos GET y HEAD.
+				Este esta dividido en dos ejecutables, server y servicio, lo cual sirve para separar las tareas de la implementacion de la interfaz y la conexion del cliente, y la del servicio que brinda el servidor.<br/>
+			</p>
+			<p>
+				<b>server</b>:  Se encarga de esperar conexiones. Cuando un cliente se conecta, el servidor clona un proceso hijo para la atencion,  este mediante una llamada a la función execv() ejecuta el programa servicio.<br/>
+				Las funciones en server:
+				<ul>
+					<li><b>socket</b>: Su funcion es crea un socket.</li>
+					<li><b>bind</b>: Esta funcion asocia un socket a una direccion y un puerto.</li>
+					<li><b>listen</b>: Prepara el socket para aceptar informacion y da el valor maximo de peticiones de conexion que van a ser colocadas en cola.</li>
+					<li><b>accept</b>: Mantiene a un servidor en espera de un pedido de conexion.</li>
+					<li><b>execv</b>: Crea una nueva imagen del proceso.</li>
+				</ul>
+			</p>
+			<p>
+				<b>servicio</b>: El servicio se encarga de recibir peticiones de parte del cliente, este la analiza y se encarga de responder a esta.
+			</p>
+			<hr>
+			<p>
+				<b>Peticion.</b><br/>
+				La peticion esta dividida en tres campos, el metodo (GET o HEAD), el recurso (archivo alojado en el servidor), La version del protocolo (HTTP/1.0). 
+			</p>
+			<hr>
+				<b>Respuesta a una Peticion.</b><br/>
+				Cuando el servicio recibe una peticion del cliente esta se separa en metodo, recurso y protocolo.
+			<div>
+				<img src="img/a.jpg">
+				<li>Luego se procede a analizar las partes.</li>
+			<div>
+					<ul>
+						<p>
+							<div> 
+								<li>Primero se verifica que el protocolo sea el HTTP 1.0 ya que este es el que utiliza el servidor.</li>
+								<img src="img/b.jpg"> 
+							</div>
+						</p>
+						<p>
+							<div>
+								<li>Despues de verificar el protocolo, se procede a verificar si el mtodo es uno de los dos metodos que implementa el servidor.</li>
+								 <img src="img/c.jpg"> 
+							 </div>
+						</p>
+						<p>
+							<div>
+								<li>Se procede a la localización del recurso. Si no se especifica un archivo se intentara enviar un index.html.</li>
+								<br>Ejemplos:
+			    				<br/>http://127.0.0.1/
+			    				<br/>http://127.0.0.1/mi_carpeta/<br>
+			    				<img src="img/d.png"> 
+		    				</div>
+	    				</p>
+	    				<p>
+	    					<div>
+			    				<li>Luego se procede a abrir el recurso solicitado para su posterior envio.</li>
+			    				<img src="img/e.jpg">
+		    				</div>
+		    				<br>
+		    				<div> 
+		    					<li>Se obtiene el contenido del recurso.</li>
+		    					<img src="img/f.png"> 
+		    				</div>
+	    				</p>
+					</ul>
+						<li>Despues de obtener el recurso se procede al armado de las cabeceras que se enviarn al cliente.</li>
+						<div> <img src="img/g.png"> </div>
+						<li>Llegado a este punto el metodo, la version del protocolo son valido y el recurso se a encontrado, por lo que:</li>
+						<ul>
+							<li>Se añade el codigo 200 indicando que la peticion es correcta.</li>
+							<li>Se indica el tipo de contenido de la respuesta.</li>
+							<div> 
+								<img src="img/h.jpg"> 
+								<br/><li>A la función extension se le da el recurso solicitado y esta se encarga de retornar un puntero al comienzo de la extension del archivo por lo general “.” </li>
+								<li>La funcion mime recibe la extension del recurso y segun el tipo de este elige el tipo de extension mime (mime es la estándar de mandar contenido a traves de la red, los tipos mime especifican tipos de datos).</li>
+							</div>
+							<li>Se indica el tamaño del recurso que se enviar.</li>
+						</ul>
+						<li>Se determina el tipo de metodo.</li>
+						Si el método es GET se agrega el contenido del recurso solicitado
+						<div> 
+							<img src="img/i.jpg"> 
+						</div>
+							<li>Se procede a enviar la respuesta al cliente.</li>
+						<div> <img src="img/j.png"> </div>
+				</div>
+			</div><br><br>
+			<div>
+				<b>Los Mensajes de Errores.</b><br/>
+				<table border=1 cellspacing=0 cellpadding=1 width=45% height=50%>
+					<tr>
+						<td><b>Codigos</b></td>
+						<td><b>Mensaje</b></td>
+						<td><b>Descripcion</b></td>
+					</tr>
+					<tr>
+						<td>400</td><td>Bad Request</td><td>La solicitud no puede ser entendida por <br>el servidor debido a un error de sintaxis.</td>
+					</tr>
+					<tr>
+						<td>404</td><td>Not Found</td><td>El servidor no ha encontrado nada que <br>coincida con la URI de solicitud.</td>
+					</tr>
+					<tr>
+						<td>501</td><td>Not Implemented</td><td>El servidor no soporta la funcionalidad<br> necesaria para cumplir con la Solicitud.</td>
+					</tr>
+					<tr>
+						<td>505</td><td>HTTP Version <br>Not Supported</td><td>El servidor no es compatible, o se niega a <br>apoyar, la version de protocolo HTTP</td>
+					</tr>
+				</table>
+				<li>Los errores pueden darse en el siguiente orden:</li>
+				<ul>
+					<li>400 Bad Request: Se analiza la primera línea de la petición se extrae el método, el recurso, la versión del protocolo en ese formato. Si eso no se cumple se envía este mensaje de respuesta en una página con formato HTML.</li>
+					<li>505 HTTP Version Not Supported: El servidor está desarrollado para responder solo a las peticiones realizadas por la versión 1.0 del protocolo HTTP, por lo que si la petición se hace con otra versión. Se enviará este mensaje en una página con formato HTML.</li>
+					<li>501 Not Implemented: Lo métodos que el servidor implementa son GET y HEAD, por lo que si se envía cualquier tipo de petición con cualquier otro método se enviará este mensaje en una página con formato HTML.</li>
+					<li>404 Not Found: Luego de verificar si la petición cumpla con uno de los dos métodos, tenga una recurso y la versión del protocolo sea la 1.0 se procede a localizar el recurso. Si este no se encuentra se envía este mensaje en una página con formato HTML.</li>
+				</ul>
+			</div>
+			<div>
+				<hr>
+				<u>Bibliografía utilizada:<br></u>
+				<a href="https://tools.ietf.org/html/rfc1945">RFC 1945</a><br>
+				<a href="https://es.wikipedia.org/wiki/Hypertext_Transfer_Protocol#TRACE">Wikipedia: HTTP</a><br>
+				<a href="https://tools.ietf.org/html/rfc2045">RFC 2045</a>
+			</div>
+		</div>
+	</body>
+</html>

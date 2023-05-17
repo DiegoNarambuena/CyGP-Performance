@@ -1,0 +1,13 @@
+body{
+	background: black;
+	color: black; 
+}
+h1, h2, h3{
+	color: #66D9EF;
+}
+a{
+	color: #66D9EF;
+}
+a:hover{
+	color: #E4FF00;
+}
